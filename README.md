@@ -3,13 +3,13 @@ terraform-controller
 
 ## ***Use K8s to Run Terraform***
 
-**NOTE:** This is a fork  of [https://github.com/rancher/terraform-controller](rancher/terraform-controller) with added features which are not accepted upstream (yet?).
+**NOTE:** This is a fork  of [rancher/terraform-controller](https://github.com/rancher/terraform-controller) with added features which are not accepted upstream (yet?).
 
-Terraform-controller - This is a low level tool to run Git controlled Terraform modules in Kubernetes. The controller manages the TF state file using Kubernetes as a remote statefile backend (requires Terraform 0.13.1)! You can have changes auto-applied or wait for an explicit "OK" before running. 
+Terraform-controller - This is a low level tool to run Git controlled Terraform modules in Kubernetes. The controller manages the TF state file using Kubernetes as a remote statefile backend (requires Terraform 0.13.1)! You can have changes auto-applied or wait for an explicit "OK" before running.
 
-There are two parts to the stack, the controller and the executor. 
+There are two parts to the stack, the controller and the executor.
 
-The controller creates three CRDs and runs controllers for modules and executions. A module is the building block and is the same as a terraform module. This is referenced from an execution which is used to combine all information needed to run Terraform. The execution combines Terraform variables and environment variables from secrets and/or config maps to provide to the executor. 
+The controller creates three CRDs and runs controllers for modules and executions. A module is the building block and is the same as a terraform module. This is referenced from an execution which is used to combine all information needed to run Terraform. The execution combines Terraform variables and environment variables from secrets and/or config maps to provide to the executor.
 
 The executor is a job that runs Terraform. Taking input from the execution run CRD the executor runs `terraform init`, `terraform plan` and `terraform create/destroy` depending on the context.
 
@@ -19,7 +19,7 @@ Executions have a 1-to-many relationship with execution runs, as updates or chan
 ```shell
 helm repo add terraform-controller https://absaoss.github.io/terraform-controller
 helm install -n terraform-controller tfctrl terraform-controller/terraform-controller
-
+```
 ## Verify
 ```
 ~ kubectl get all -n terraform-controller
@@ -64,7 +64,7 @@ Modify `./example/00-secret.yaml` with your Digital Ocean API token and desired 
 
 Run `kubectl create -f ./example -n terraform-controller` to create all envvars/secrets/module and the execution which will automatically run. The controller creates Jobs for the Terraform runs so to access logs check the pod logs for the executor create and destroy jobs. This example is setup to auto-confirm and auto-delete when the CRD object is destroyed.
 
-Delete the droplet by deleting the CRD `kubectl delete -f ./example/20-deployment.yaml -n terraform-controller`. 
+Delete the droplet by deleting the CRD `kubectl delete -f ./example/20-deployment.yaml -n terraform-controller`.
 
 ## Approving a Plan
 In `./example/20-execution.yaml` its pre-configured to auto-approve and auto-delete when you make the execution CRD. You can turn off `spec.destroyOnDelete` and `spec.autoConfirm` and do these by hand doing the following.
